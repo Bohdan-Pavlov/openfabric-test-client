@@ -1,0 +1,4 @@
+<div class="logo">Openfabric</div>
+<button mat-raised-button color="accent" (click)="onAuthButtonClick()">
+	{{ (authService.isAuth$ | async) ? 'Logout' : 'Authorize' }}
+</button>

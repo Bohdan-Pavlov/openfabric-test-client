@@ -1,0 +1,17 @@
+<h1 class="title">Products</h1>
+<section class="products">
+	<app-product-card
+		*ngFor="let product of productsService.products$ | async"
+		[product]="product"></app-product-card>
+	<app-add-product-button
+		*ngIf="authService.isAuth$.value && !productsService.isLoading$.value"
+		(click)="openModal()"></app-add-product-button>
+</section>
+<app-product-modal
+	*ngIf="productsService.isModalOpened$ | async"
+	[selectedProduct]="
+		productsService.selectedProduct$ | async
+	"></app-product-modal>
+<mat-spinner
+	class="spinner"
+	*ngIf="productsService.isLoading$.value"></mat-spinner>

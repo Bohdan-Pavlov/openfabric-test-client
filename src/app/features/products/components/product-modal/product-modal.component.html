@@ -1,0 +1,68 @@
+<div class="modal" (click)="closeModal($event)">
+	<div class="modal-content content">
+		<button class="content__close-btn" (click)="closeModal($event)">X</button>
+		<h2 class="content__title">
+			{{ selectedProduct ? 'Update Product' : 'Add product' }}
+		</h2>
+		<div class="error">
+			<div *ngIf="productsService.productErrorMessage$ | async">
+				{{ productsService.productErrorMessage$ | async }}
+			</div>
+		</div>
+		<form
+			[formGroup]="productForm"
+			(ngSubmit)="onSubmit()"
+			class="product-form">
+			<mat-form-field appearance="fill">
+				<mat-label>Title</mat-label>
+				<input
+					appTrimControlValue
+					matInput
+					type="text"
+					formControlName="name" />
+				<mat-error *ngIf="name?.errors">
+					{{ productsService.getValidationMessage(name?.errors) }}
+				</mat-error>
+			</mat-form-field>
+			<mat-form-field appearance="fill">
+				<mat-label>Description</mat-label>
+				<input
+					appTrimControlValue
+					matInput
+					type="text"
+					formControlName="description" />
+				<mat-error *ngIf="description?.errors">
+					{{ productsService.getValidationMessage(description?.errors) }}
+				</mat-error>
+			</mat-form-field>
+			<mat-form-field appearance="fill">
+				<mat-label>Price</mat-label>
+				<input
+					appTrimControlValue
+					matInput
+					type="number"
+					formControlName="price" />
+				<mat-error *ngIf="price?.errors">
+					{{ productsService.getValidationMessage(price?.errors) }}
+				</mat-error>
+			</mat-form-field>
+			<mat-form-field appearance="fill">
+				<mat-label>Image Url</mat-label>
+				<input
+					appTrimControlValue
+					matInput
+					type="text"
+					formControlName="imgUrl" />
+				<mat-error *ngIf="imgUrl?.errors">
+					{{ productsService.getValidationMessage(imgUrl?.errors) }}
+				</mat-error>
+			</mat-form-field>
+			<button
+				mat-raised-button
+				color="primary"
+				[disabled]="productForm.invalid || productsService.isSubmitting$.value">
+				{{ selectedProduct ? 'Update' : 'Create' }}
+			</button>
+		</form>
+	</div>
+</div>

@@ -1,0 +1,17 @@
+<mat-card class="card-wrapper">
+	<mat-card-content class="card">
+		<img class="card__image" [src]="product.imgUrl" [alt]="product.name" />
+		<div class="card__info">
+			<h3 class="name">{{ product.name }}</h3>
+			<p class="description">{{ product.description }}</p>
+			<p class="currency">{{ product.price | currency }}</p>
+		</div>
+		<button
+			*ngIf="authService.isAuth$ | async"
+			mat-raised-button
+			color="primary"
+			(click)="onEditProduct()">
+			Update
+		</button>
+	</mat-card-content>
+</mat-card>

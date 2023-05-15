@@ -1,0 +1,56 @@
+<div class="auth-error">
+	<div *ngIf="authService.authErrorMessage$ | async">
+		{{ authService.authErrorMessage$ | async }}
+	</div>
+</div>
+
+<h2 class="auth-title">Register</h2>
+
+<form class="auth-form" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+	<mat-form-field appearance="fill">
+		<mat-label>Email</mat-label>
+		<input
+			appTrimControlValue
+			matInput
+			type="email"
+			autocomplete="email"
+			formControlName="email" />
+		<mat-error *ngIf="email?.errors">
+			{{ authService.getValidationMessage(email?.errors) }}
+		</mat-error>
+	</mat-form-field>
+	<mat-form-field appearance="fill">
+		<mat-label>Password</mat-label>
+		<input
+			appTrimControlValue
+			matInput
+			type="password"
+			formControlName="password" />
+		<mat-error *ngIf="password?.errors">
+			{{ authService.getValidationMessage(password?.errors) }}
+		</mat-error>
+	</mat-form-field>
+	<mat-form-field appearance="fill">
+		<mat-label>Confirm Password</mat-label>
+		<input
+			appTrimControlValue
+			matInput
+			type="password"
+			formControlName="confirmPassword" />
+		<mat-error *ngIf="confirmPassword?.errors">
+			{{ authService.getValidationMessage(confirmPassword?.errors) }}
+		</mat-error>
+	</mat-form-field>
+	<button
+		[disabled]="registerForm.invalid || authService.isSubmitting$.value"
+		class="auth-form__button"
+		mat-raised-button
+		color="primary">
+		Register
+	</button>
+</form>
+
+<div class="redirect">
+	<p>Already have an account?</p>
+	<a [routerLink]="'/' + LOGIN_PAGE_ROUTE">Login</a>
+</div>
