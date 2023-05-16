@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
+
 import { IProductFromServer } from 'src/app/features/products/interfaces/products.interfaces';
 import { ProductsService } from 'src/app/features/products/services/products.service';
 
@@ -13,6 +14,7 @@ export class ProductDetailsComponent implements OnInit {
 	public selectedProduct$!: BehaviorSubject<IProductFromServer | null>;
 	public isLoading$!: BehaviorSubject<boolean>;
 	public productErrorMessage$!: BehaviorSubject<string>;
+	public fetchDataErrorMessage$!: BehaviorSubject<string>;
 
 	constructor(private productsService: ProductsService, private route: ActivatedRoute) {}
 
@@ -28,5 +30,6 @@ export class ProductDetailsComponent implements OnInit {
 		this.selectedProduct$ = this.productsService.selectedProduct$;
 		this.isLoading$ = this.productsService.isLoading$;
 		this.productErrorMessage$ = this.productsService.productErrorMessage$;
+		this.fetchDataErrorMessage$ = this.productsService.fetchDataErrorMessage$;
 	}
 }

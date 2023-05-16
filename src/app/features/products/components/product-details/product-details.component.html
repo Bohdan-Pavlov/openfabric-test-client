@@ -1,4 +1,5 @@
 <app-go-back-button></app-go-back-button>
+
 <div class="info" *ngIf="selectedProduct$ | async as selectedProduct">
 	<div class="image">
 		<img [src]="selectedProduct.imgUrl" [alt]="selectedProduct.name" />
@@ -13,4 +14,7 @@
 		</div>
 	</div>
 </div>
+
 <mat-spinner class="spinner" *ngIf="isLoading$ | async"></mat-spinner>
+
+<div class="fetch-error" *ngIf="fetchDataErrorMessage$ | async as error">{{ error }}</div>

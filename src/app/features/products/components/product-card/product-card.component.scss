@@ -1,36 +1,40 @@
+:host {
+  position: relative;
+}
+
 .card-wrapper {
   height: 100%;
   cursor: pointer;
-}
 
-.card {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-
-  &__info {
-    flex-grow: 1;
+  .card {
+    height: 100%;
     display: flex;
     flex-direction: column;
     gap: 10px;
 
-    & .name {
-      font-size: 1em;
-    }
-
-    & .description {
+    &__info {
       flex-grow: 1;
-      font-size: 0.8em;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      & .name {
+        font-size: 1em;
+      }
+
+      & .description {
+        flex-grow: 1;
+        font-size: 0.8em;
+      }
+
+      & .currency {
+        align-self: flex-end;
+      }
     }
 
-    & .currency {
-      align-self: flex-end;
+    &__image {
+      width: 100%;
+      height: 100px;
     }
-  }
-
-  &__image {
-    width: 100%;
-    height: 100px;
   }
 }

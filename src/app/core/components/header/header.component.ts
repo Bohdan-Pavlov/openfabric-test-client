@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { LOGIN_PAGE_ROUTE } from 'src/app/app.constants';
 
+import { LOGIN_PAGE_ROUTE } from 'src/app/app.constants';
 import { AuthService } from 'src/app/features/auth/services/auth.service';
 
 @Component({

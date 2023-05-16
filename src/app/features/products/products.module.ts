@@ -17,6 +17,7 @@ import { AddProductButtonComponent } from './components/add-product-button/add-p
 import { ProductModalComponent } from './components/product-modal/product-modal.component';
 import { ProductDetailsComponent } from './components/product-details/product-details.component';
 import { GoBackButtonComponent } from './components/go-back-button/go-back-button.component';
+import { DeleteButtonComponent } from './components/delete-button/delete-button.component';
 
 @NgModule({
 	declarations: [
@@ -26,6 +27,7 @@ import { GoBackButtonComponent } from './components/go-back-button/go-back-butto
 		ProductModalComponent,
 		ProductDetailsComponent,
 		GoBackButtonComponent,
+		DeleteButtonComponent,
 	],
 	imports: [
 		CommonModule,

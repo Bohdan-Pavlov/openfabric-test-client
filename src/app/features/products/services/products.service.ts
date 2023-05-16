@@ -1,3 +1,4 @@
+import { logCumulativeDurations } from '@angular-devkit/build-angular/src/builders/browser-esbuild/profiling';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ValidationErrors } from '@angular/forms';
@@ -23,6 +24,8 @@ export class ProductsService {
 
 	public productErrorMessage$: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
+	public fetchDataErrorMessage$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+
 	constructor(private http: HttpClient) {}
 
 	public getProducts(): void {
@@ -36,8 +39,8 @@ export class ProductsService {
 					this.products$.next(products);
 					this.isLoading$.next(false);
 				},
-				error: (error: ApiError) => {
-					this.productErrorMessage$.next(error.error.message);
+				error: (error: Error) => {
+					this.fetchDataErrorMessage$.next(error.message);
 					this.isLoading$.next(false);
 				},
 			});
@@ -54,8 +57,8 @@ export class ProductsService {
 					this.selectedProduct$.next(product);
 					this.isLoading$.next(false);
 				},
-				error: (error: ApiError) => {
-					this.productErrorMessage$.next(error.error.message);
+				error: (error: Error) => {
+					this.fetchDataErrorMessage$.next(error.message);
 					this.isLoading$.next(false);
 				},
 			});
@@ -100,6 +103,29 @@ export class ProductsService {
 					this.isModalOpened$.next(false);
 					this.selectedProduct$.next(null);
 					this.productErrorMessage$.next('');
+				},
+				error: (error: ApiError) => {
+					this.productErrorMessage$.next(error.error.message);
+					this.isSubmitting$.next(false);
+				},
+			});
+	}
+
+	public deleteProduct(id: string): void {
+		const path = environment.API_BASE_URL + 'products/' + id;
+
+		this.http
+			.delete<{ message: string }>(path)
+			.pipe(take(1))
+			.subscribe({
+				next: (res: { message: string }): void => {
+					const oldProducts: IProductFromServer[] = this.products$.value;
+					const filteredProducts: IProductFromServer[] = oldProducts.filter((p: IProductFromServer) => p._id !== id);
+
+					this.products$.next(filteredProducts);
+					this.isSubmitting$.next(false);
+					this.productErrorMessage$.next('');
+					alert(res.message);
 				},
 				error: (error: ApiError) => {
 					this.productErrorMessage$.next(error.error.message);

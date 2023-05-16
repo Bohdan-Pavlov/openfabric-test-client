@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+
 import { AuthService } from 'src/app/features/auth/services/auth.service';
 import { IProductFromServer } from 'src/app/features/products/interfaces/products.interfaces';
-
 import { ProductsService } from 'src/app/features/products/services/products.service';
 
 @Component({
@@ -17,6 +17,7 @@ export class ProductsComponent implements OnInit {
 	public isLoading$!: BehaviorSubject<boolean>;
 	public selectedProduct$!: BehaviorSubject<IProductFromServer | null>;
 	public isModalOpened$!: BehaviorSubject<boolean>;
+	public fetchDataErrorMessage$!: BehaviorSubject<string>;
 
 	constructor(private productsService: ProductsService, private authService: AuthService) {}
 
@@ -31,6 +32,7 @@ export class ProductsComponent implements OnInit {
 		this.isLoading$ = this.productsService.isLoading$;
 		this.selectedProduct$ = this.productsService.selectedProduct$;
 		this.isModalOpened$ = this.productsService.isModalOpened$;
+		this.fetchDataErrorMessage$ = this.productsService.fetchDataErrorMessage$;
 	}
 
 	public openModal(): void {

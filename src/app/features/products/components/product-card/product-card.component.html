@@ -9,3 +9,4 @@
 		<button *ngIf="isAuth$ | async" mat-raised-button color="primary" (click)="onEditProduct($event)">Update</button>
 	</mat-card-content>
 </mat-card>
+<app-delete-button *ngIf="isAuth$ | async" [productId]="product._id"></app-delete-button>
