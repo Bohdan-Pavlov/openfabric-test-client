@@ -1,6 +1,6 @@
 <div class="auth-error">
-	<div *ngIf="authService.authErrorMessage$ | async">
-		{{ authService.authErrorMessage$ | async }}
+	<div *ngIf="authErrorMessage$ | async">
+		{{ authErrorMessage$ | async }}
 	</div>
 </div>
 
@@ -9,29 +9,20 @@
 <form class="auth-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 	<mat-form-field appearance="fill">
 		<mat-label>Email</mat-label>
-		<input
-			appTrimControlValue
-			matInput
-			type="email"
-			autocomplete="email"
-			formControlName="email" />
-		<mat-error *ngIf="email?.errors">
-			{{ authService.getValidationMessage(email?.errors) }}
+		<input appTrimControlValue matInput type="email" autocomplete="email" formControlName="email" />
+		<mat-error *ngIf="email.errors">
+			{{ getValidationMessage(email.errors) }}
 		</mat-error>
 	</mat-form-field>
 	<mat-form-field appearance="fill">
 		<mat-label>Password</mat-label>
-		<input
-			appTrimControlValue
-			matInput
-			type="password"
-			formControlName="password" />
-		<mat-error *ngIf="password?.errors">
-			{{ authService.getValidationMessage(password?.errors) }}
+		<input appTrimControlValue matInput type="password" formControlName="password" />
+		<mat-error *ngIf="password.errors">
+			{{ getValidationMessage(password.errors) }}
 		</mat-error>
 	</mat-form-field>
 	<button
-		[disabled]="loginForm.invalid || authService.isSubmitting$.value"
+		[disabled]="loginForm.invalid || isSubmitting$.value"
 		class="auth-form__button"
 		mat-raised-button
 		color="primary">

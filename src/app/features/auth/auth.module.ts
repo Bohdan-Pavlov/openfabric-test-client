@@ -15,14 +15,7 @@ import { RegisterComponent } from './components/register/register.component';
 
 @NgModule({
 	declarations: [LoginComponent, RegisterComponent],
-	imports: [
-		CommonModule,
-		ReactiveFormsModule,
-		MatInputModule,
-		MatButtonModule,
-		RouterLink,
-		SharedModule,
-	],
+	imports: [CommonModule, ReactiveFormsModule, MatInputModule, MatButtonModule, RouterLink, SharedModule],
 	providers: [
 		AuthService,
 		LocalStorageService,

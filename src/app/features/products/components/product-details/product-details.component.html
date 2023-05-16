@@ -1,0 +1,16 @@
+<app-go-back-button></app-go-back-button>
+<div class="info" *ngIf="selectedProduct$ | async as selectedProduct">
+	<div class="image">
+		<img [src]="selectedProduct.imgUrl" [alt]="selectedProduct.name" />
+	</div>
+	<div class="details">
+		<h2 class="details__title">{{ selectedProduct.name }}</h2>
+		<p class="details__description">{{ selectedProduct.description }}</p>
+		<p class="details__price"><span>Price:</span> {{ selectedProduct.price | currency }}</p>
+		<div class="details__buttons">
+			<button mat-raised-button>Add to bucket</button>
+			<button mat-raised-button color="primary">Add to favourite</button>
+		</div>
+	</div>
+</div>
+<mat-spinner class="spinner" *ngIf="isLoading$ | async"></mat-spinner>

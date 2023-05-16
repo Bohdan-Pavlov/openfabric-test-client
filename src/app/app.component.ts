@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
 import { AuthService } from 'src/app/features/auth/services/auth.service';
 import { LocalStorageService } from 'src/app/features/auth/services/local-storage.service';
@@ -7,12 +7,10 @@ import { LocalStorageService } from 'src/app/features/auth/services/local-storag
 	selector: 'app-root',
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
-	constructor(
-		private authService: AuthService,
-		private localStorageService: LocalStorageService
-	) {}
+	constructor(private authService: AuthService, private localStorageService: LocalStorageService) {}
 
 	public ngOnInit(): void {
 		const token = this.localStorageService.get('accessToken');

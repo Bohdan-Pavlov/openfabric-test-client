@@ -1,37 +1,38 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { BehaviorSubject } from 'rxjs';
+
 import { LOGIN_PAGE_ROUTE } from 'src/app/app.constants';
-import {
-	ACCESS_TOKEN,
-	EMAIL_PATTERN,
-} from 'src/app/features/auth/auth.constants';
-import {
-	AuthResponse,
-	AuthUserData,
-} from 'src/app/features/auth/interfaces/auth.interfaces';
+import { EMAIL_PATTERN } from 'src/app/features/auth/auth.constants';
+import { AuthUserData } from 'src/app/features/auth/interfaces/auth.interfaces';
 import { AuthService } from 'src/app/features/auth/services/auth.service';
-import { LocalStorageService } from 'src/app/features/auth/services/local-storage.service';
 import { matchPasswordValidator } from 'src/app/features/auth/validators/match-password.validator';
+import { getControl } from 'src/app/shared/helpers/get-control.helper';
 
 @Component({
 	selector: 'app-register',
 	templateUrl: './register.component.html',
 	styleUrls: ['./register.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
 	protected readonly LOGIN_PAGE_ROUTE = LOGIN_PAGE_ROUTE;
 	public registerForm!: FormGroup;
+	public isSubmitting$!: BehaviorSubject<boolean>;
+	public authErrorMessage$!: BehaviorSubject<string>;
+	public getValidationMessage!: (errors: ValidationErrors) => string;
 
-	constructor(
-		private fb: FormBuilder,
-		public authService: AuthService,
-		private router: Router,
-		private localStorageService: LocalStorageService
-	) {}
+	constructor(private fb: FormBuilder, private authService: AuthService) {}
 
 	public ngOnInit(): void {
+		this.initializeValues();
 		this.initializeForm();
+	}
+
+	private initializeValues(): void {
+		this.isSubmitting$ = this.authService.isSubmitting$;
+		this.authErrorMessage$ = this.authService.authErrorMessage$;
+		this.getValidationMessage = this.authService.getValidationMessage;
 	}
 
 	private initializeForm(): void {
@@ -46,35 +47,26 @@ export class RegisterComponent implements OnInit {
 	}
 
 	public get email() {
-		return this.registerForm.get('email');
+		return getControl(this.registerForm, 'email');
 	}
 
 	public get password() {
-		return this.registerForm.get('password');
+		return getControl(this.registerForm, 'password');
 	}
 
 	public get confirmPassword() {
-		return this.registerForm.get('confirmPassword');
+		return getControl(this.registerForm, 'confirmPassword');
 	}
 
 	public onSubmit(): void {
-		this.authService.isSubmitting$.next(true);
 		const userData: AuthUserData = {
 			email: this.registerForm.value.email,
 			password: this.registerForm.value.password,
 		};
-		this.authService.register(userData).subscribe({
-			next: (response: AuthResponse) => {
-				this.localStorageService.set(ACCESS_TOKEN, response.accessToken);
-				this.authService.isAuth$.next(true);
-				this.authService.authErrorMessage$.next('');
-				this.authService.isSubmitting$.next(false);
-				this.router.navigate(['/']);
-			},
-			error: err => {
-				this.authService.authErrorMessage$.next(err.error.message);
-				this.authService.isSubmitting$.next(false);
-			},
-		});
+		this.authService.auth(userData, 'register');
+	}
+
+	public ngOnDestroy(): void {
+		this.authService.authErrorMessage$.next('');
 	}
 }

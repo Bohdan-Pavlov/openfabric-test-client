@@ -1,15 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { BehaviorSubject } from 'rxjs';
 
 import { REGISTER_PAGE_ROUTE } from 'src/app/app.constants';
-import {
-	ACCESS_TOKEN,
-	EMAIL_PATTERN,
-} from 'src/app/features/auth/auth.constants';
-import { AuthResponse } from 'src/app/features/auth/interfaces/auth.interfaces';
+import { EMAIL_PATTERN } from 'src/app/features/auth/auth.constants';
 import { AuthService } from 'src/app/features/auth/services/auth.service';
-import { LocalStorageService } from 'src/app/features/auth/services/local-storage.service';
+import { getControl } from 'src/app/shared/helpers/get-control.helper';
 
 @Component({
 	selector: 'app-login',
@@ -17,19 +13,24 @@ import { LocalStorageService } from 'src/app/features/auth/services/local-storag
 	styleUrls: ['./login.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
 	protected readonly REGISTER_PAGE_ROUTE = REGISTER_PAGE_ROUTE;
 	public loginForm!: FormGroup;
+	public isSubmitting$!: BehaviorSubject<boolean>;
+	public authErrorMessage$!: BehaviorSubject<string>;
+	public getValidationMessage!: (errors: ValidationErrors) => string;
 
-	constructor(
-		private fb: FormBuilder,
-		public authService: AuthService,
-		private router: Router,
-		private localStorageService: LocalStorageService
-	) {}
+	constructor(private fb: FormBuilder, public authService: AuthService) {}
 
 	public ngOnInit(): void {
+		this.initializeValues();
 		this.initializeForm();
+	}
+
+	private initializeValues(): void {
+		this.isSubmitting$ = this.authService.isSubmitting$;
+		this.authErrorMessage$ = this.authService.authErrorMessage$;
+		this.getValidationMessage = this.authService.getValidationMessage;
 	}
 
 	private initializeForm(): void {
@@ -40,28 +41,19 @@ export class LoginComponent implements OnInit {
 	}
 
 	public get email() {
-		return this.loginForm.get('email');
+		return getControl(this.loginForm, 'email');
 	}
 
 	public get password() {
-		return this.loginForm.get('password');
+		return getControl(this.loginForm, 'password');
 	}
 
 	public onSubmit(): void {
-		this.authService.isSubmitting$.next(true);
 		const userData = this.loginForm.value;
-		this.authService.login(userData).subscribe({
-			next: (response: AuthResponse) => {
-				this.localStorageService.set(ACCESS_TOKEN, response.accessToken);
-				this.authService.isAuth$.next(true);
-				this.authService.authErrorMessage$.next('');
-				this.authService.isSubmitting$.next(false);
-				this.router.navigate(['/']);
-			},
-			error: err => {
-				this.authService.authErrorMessage$.next(err.error.message);
-				this.authService.isSubmitting$.next(false);
-			},
-		});
+		this.authService.auth(userData, 'login');
+	}
+
+	public ngOnDestroy(): void {
+		this.authService.authErrorMessage$.next('');
 	}
 }

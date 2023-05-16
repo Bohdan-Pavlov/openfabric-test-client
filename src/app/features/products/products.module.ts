@@ -15,6 +15,8 @@ import { ProductsComponent } from './products.component';
 import { ProductCardComponent } from './components/product-card/product-card.component';
 import { AddProductButtonComponent } from './components/add-product-button/add-product-button.component';
 import { ProductModalComponent } from './components/product-modal/product-modal.component';
+import { ProductDetailsComponent } from './components/product-details/product-details.component';
+import { GoBackButtonComponent } from './components/go-back-button/go-back-button.component';
 
 @NgModule({
 	declarations: [
@@ -22,6 +24,8 @@ import { ProductModalComponent } from './components/product-modal/product-modal.
 		ProductCardComponent,
 		AddProductButtonComponent,
 		ProductModalComponent,
+		ProductDetailsComponent,
+		GoBackButtonComponent,
 	],
 	imports: [
 		CommonModule,

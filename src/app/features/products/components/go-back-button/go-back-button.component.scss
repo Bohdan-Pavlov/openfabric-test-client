@@ -1,0 +1,14 @@
+.go-back {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  font-size: 1.4em;
+  gap: 20px;
+  cursor: pointer;
+
+  & img {
+    width: 40px;
+  }
+}
