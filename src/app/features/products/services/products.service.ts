@@ -1,4 +1,3 @@
-import { logCumulativeDurations } from '@angular-devkit/build-angular/src/builders/browser-esbuild/profiling';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ValidationErrors } from '@angular/forms';
